@@ -10,6 +10,8 @@ import (
 
 // serverType defines server identification when logging
 const serverType = "UDP:Server"
+// savePath defines path for saving received file data
+const savePath = "./test/receive/UDP_RECEIVED.txt"
 
 // CreateUDPServer create server and listen to UDP
 func CreateUDPServer(network string, serverPort string) {
@@ -37,7 +39,7 @@ func CreateUDPServer(network string, serverPort string) {
 // handleClient handles incoming UDP client connections
 func handleClient(remoteAddr string, buffer []byte) {
 	// Create new file
-	file, err := os.Create("./test/receive/UDP_RECEIVED.txt")
+	file, err := os.Create(savePath)
 	c.CheckError(serverType, err)
 	defer file.Close()
 
