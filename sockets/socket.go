@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// getEnvParams gets environment parameters
 func getEnvParams() (host string, port string) {
 	if err := env.Load(".env"); err != nil {
 		fmt.Println("Where is .env?")
@@ -18,6 +19,7 @@ func getEnvParams() (host string, port string) {
 	return
 }
 
+// GetSocket parses cmdline arguments and get asked socket type connector
 func GetSocket(socketType string, networkType string)  {
 	host, port := getEnvParams()
 	if socketType == "client" && networkType == "tcp" {

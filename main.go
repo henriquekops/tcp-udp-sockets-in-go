@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-// Responsible for argument parsing
-// Calls the 'socket' package for socket initialization
+// main is responsible for parsing and redirecting arguments to socket package
 func main() {
 
 	modePtr := flag.String("mode", "server", "Start mode - {client, server}")

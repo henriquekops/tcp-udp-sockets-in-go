@@ -42,7 +42,6 @@ func CreateTCPServer(network string, serverPort string) {
 func handleClient(tcpSocket c.Socket, connection net.Conn) {
 	// New connection
 	remoteAddr := connection.RemoteAddr().String()
-	tcpSocket.Log("NEW CONNECTION (SOURCE='"+remoteAddr+"')")
 	defer connection.Close()
 
 	// Create new file
@@ -58,5 +57,4 @@ func handleClient(tcpSocket c.Socket, connection net.Conn) {
 	fileInfo, _ := file.Stat()
 	formatBytes := strconv.FormatInt(fileInfo.Size(), 10)
 	tcpSocket.Log("RECEIVED "+formatBytes+" BYTES (SOURCE='"+remoteAddr+"')")
-	tcpSocket.Log("CLOSING CONNECTION (SOURCE='"+remoteAddr+"')")
 }
