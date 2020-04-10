@@ -2,19 +2,23 @@ package UDP
 
 import (
 	c "../common"
+	"bufio"
 	"fmt"
 	"io"
 	"net"
 	"os"
 	"strconv"
+	"strings"
 )
 
+// clientType defines client identification when logging
 const clientType = "UDP:Client"
 
+// CreateUDPClient creates new UDP connection
 func CreateUDPClient(network string, serverAddress string) {
 
 	// Startup
-	fmt.Println("Starting up " + clientType + " ...")
+	fmt.Println("Starting up "+clientType+" ...")
 
 	udpAddr, err := net.ResolveUDPAddr(network, serverAddress)
 	c.CheckError(clientType, err)
@@ -23,10 +27,16 @@ func CreateUDPClient(network string, serverAddress string) {
 	c.CheckError(clientType, err)
 	defer connection.Close()
 
-	c.Log(clientType, "Connected to '" + connection.RemoteAddr().String() + "'")
+	reader := bufio.NewReader(os.Stdin)
+	c.Log(clientType, "Connected to '"+connection.RemoteAddr().String()+"'")
+
+	// Read from cmdline
+	c.Log(clientType, "Input file path to send [HINT: use './test/send/test.txt']")
+	fmt.Print("[PATH]: ")
+	filePath, _ := reader.ReadString('\n')
 
 	// Open file
-	file, err := os.Open("./test/send/test1.txt")
+	file, err := os.Open(strings.TrimSpace(strings.TrimSuffix(filePath, "\n")))
 	if err != nil {
 		c.Log(clientType, "File does not exist!")
 		return
@@ -39,5 +49,6 @@ func CreateUDPClient(network string, serverAddress string) {
 	c.CheckError(clientType, err)
 
 	// Log
-	c.Log(clientType, "SENT " + strconv.FormatInt(fileInfo.Size(), 10) + " BYTES")
+	formatBytes := strconv.FormatInt(fileInfo.Size(), 10)
+	c.Log(clientType, "SENT "+formatBytes+" BYTES (DEST='"+serverAddress+"')")
 }

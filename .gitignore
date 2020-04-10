@@ -1,2 +1,7 @@
+# environment
 .env
 .idea
+
+# test data
+/test/receive/*
+!/test/receive/.gitkeep

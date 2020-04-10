@@ -6,12 +6,12 @@ import (
 	"time"
 )
 
-// Communication buffer size
+// BUFFER_SIZE defines communication buffer size
 const BUFFER_SIZE = 1024
-// Timestamp format
+// TIMESTAMP defines timestamp log format
 const TIMESTAMP = "02 Jan 06 15:04"
 
-// Common log format
+// Log creates common log format
 func Log(socketType string, logMessage string) {
 	t := time.Now()
 	fmt.Printf("[%s] %s - %s\n",
@@ -21,7 +21,7 @@ func Log(socketType string, logMessage string) {
 	)
 }
 
-// Common error validation
+// CheckError creates common error validation
 func CheckError(socketType string, err error) {
 	if err != nil {
 		t := time.Now()

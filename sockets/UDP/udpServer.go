@@ -8,12 +8,14 @@ import (
 	"strconv"
 )
 
-const serverType  = "UDP:Server"
+// serverType defines server identification when logging
+const serverType = "UDP:Server"
 
+// CreateUDPServer create server and listen to UDP
 func CreateUDPServer(network string, serverPort string) {
 
 	// Startup
-	fmt.Println("Starting up " + serverType + " ...")
+	fmt.Println("Starting up "+serverType+" ...")
 
 	listener, err := net.ListenPacket(network, serverPort)
 	c.CheckError(serverType, err)
@@ -32,9 +34,8 @@ func CreateUDPServer(network string, serverPort string) {
 	}
 }
 
+// handleClient handles incoming UDP client connections
 func handleClient(remoteAddr string, buffer []byte) {
-	c.Log(serverType, "NEW CONECTION (SOURCE='"+remoteAddr+"'")
-
 	// Create new file
 	file, err := os.Create("./test/receive/UDP_RECEIVED.txt")
 	c.CheckError(serverType, err)
@@ -46,6 +47,6 @@ func handleClient(remoteAddr string, buffer []byte) {
 
 	// Log
 	fileInfo, _ := file.Stat()
-	c.Log(serverType, "RECEIVED " + strconv.FormatInt(fileInfo.Size(), 10) + " BYTES")
-	c.Log(serverType, "CLOSING CONNECTION WITH " + remoteAddr)
+	formatBytes := strconv.FormatInt(fileInfo.Size(), 10)
+	c.Log(serverType, "RECEIVED "+formatBytes+" BYTES (SOURCE='"+remoteAddr+"')")
 }
