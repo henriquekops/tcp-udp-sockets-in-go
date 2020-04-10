@@ -2,11 +2,11 @@ package UDP
 
 import (
 	c "../common"
-	"bufio"
 	"fmt"
+	"io"
 	"net"
 	"os"
-	"strings"
+	"strconv"
 )
 
 const clientType = "UDP:Client"
@@ -24,23 +24,20 @@ func CreateUDPClient(network string, serverAddress string) {
 	defer connection.Close()
 
 	c.Log(clientType, "Connected to '" + connection.RemoteAddr().String() + "'")
-	c.Log(clientType, "Input your data to send to server\n['exit' to quit]")
 
-	for {
-		// Args
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("$ ")
-		input, _ := reader.ReadString('\n')
-
-		// Write to UDP server
-		data := []byte(input)
-		_, err := connection.Write(data)
-		c.CheckError(clientType, err)
-
-		// Exit?
-		if strings.TrimSpace(input) == "exit" {
-			c.Log(clientType, "Safe quit... Bye :)")
-			return
-		}
+	// Open file
+	file, err := os.Open("./test/send/test1.txt")
+	if err != nil {
+		c.Log(clientType, "File does not exist!")
+		return
 	}
+	defer file.Close()
+
+	// Send file to TCP server
+	fileInfo, _ := file.Stat()
+	_, err =  io.Copy(connection, file)
+	c.CheckError(clientType, err)
+
+	// Log
+	c.Log(clientType, "SENT " + strconv.FormatInt(fileInfo.Size(), 10) + " BYTES")
 }
