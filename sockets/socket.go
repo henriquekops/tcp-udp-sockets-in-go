@@ -1,8 +1,8 @@
 package sockets
 
 import (
-	tcp "./TCP"
-	udp "./UDP"
+	"./tcp"
+	"./udp"
 	"fmt"
 	env "github.com/joho/godotenv"
 	"os"

@@ -1,4 +1,4 @@
-package TCP
+package tcp
 
 import (
 	c "../common"
@@ -9,8 +9,8 @@ import (
 	"strconv"
 )
 
-// serverType defines server identification when logging
-const serverType = "TCP:Server"
+// TCPServerType defines server identification when logging
+const TCPServerType = "TCP:Server"
 // savePath defines path for saving received file data
 const savePath = "./test/receive/TCP_RECEIVED.txt"
 
@@ -18,43 +18,45 @@ const savePath = "./test/receive/TCP_RECEIVED.txt"
 func CreateTCPServer(network string, serverPort string) {
 
 	// Startup
-	fmt.Println("Starting up "+serverType+" ...")
+	fmt.Println("Starting up "+TCPServerType+" ...")
+
+	tcpSocket := c.Socket{TCPServerType}
 
 	listener, err := net.Listen(network, serverPort)
-	c.CheckError(serverType, err)
+	tcpSocket.CheckError(err)
 	defer listener.Close()
 
-	c.Log(serverType, "Up and running!\n[Crtl+C to quit]")
+	tcpSocket.Log("Up and running!\n[Crtl+C to quit]")
 
 	// Listening to TCP
 	for {
 		connection, err := listener.Accept()
-		c.CheckError(serverType, err)
+		tcpSocket.CheckError(err)
 
 		// Incoming request!
-		go handleClient(connection)
+		go handleClient(tcpSocket, connection)
 	}
 }
 
 // handleClient handles incoming TCP client connections
-func handleClient(connection net.Conn) {
+func handleClient(tcpSocket c.Socket, connection net.Conn) {
 	// New connection
 	remoteAddr := connection.RemoteAddr().String()
-	c.Log(serverType, "NEW CONNECTION (SOURCE='"+remoteAddr+"')")
+	tcpSocket.Log("NEW CONNECTION (SOURCE='"+remoteAddr+"')")
 	defer connection.Close()
 
 	// Create new file
 	file, err := os.Create(savePath)
-	c.CheckError(serverType, err)
+	tcpSocket.CheckError(err)
 	defer file.Close()
 
 	// Copy file data
 	_, err = io.Copy(file, connection)
-	c.CheckError(serverType, err)
+	tcpSocket.CheckError(err)
 
 	// Log
 	fileInfo, _ := file.Stat()
 	formatBytes := strconv.FormatInt(fileInfo.Size(), 10)
-	c.Log(serverType, "RECEIVED "+formatBytes+" BYTES (SOURCE='"+remoteAddr+"')")
-	c.Log(serverType, "CLOSING CONNECTION (SOURCE='"+remoteAddr+"')")
+	tcpSocket.Log("RECEIVED "+formatBytes+" BYTES (SOURCE='"+remoteAddr+"')")
+	tcpSocket.Log("CLOSING CONNECTION (SOURCE='"+remoteAddr+"')")
 }

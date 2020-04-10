@@ -6,27 +6,32 @@ import (
 	"time"
 )
 
-// BUFFER_SIZE defines communication buffer size
-const BUFFER_SIZE = 1024
+// Socket struct keeps socket type string for logging
+type Socket struct {
+	SocketType string
+}
+
+// BUFFERSIZE defines communication buffer size
+const BUFFERSIZE = 1024
 // TIMESTAMP defines timestamp log format
 const TIMESTAMP = "02 Jan 06 15:04"
 
 // Log creates common log format
-func Log(socketType string, logMessage string) {
+func (socket *Socket) Log(logMessage string) {
 	t := time.Now()
 	fmt.Printf("[%s] %s - %s\n",
-		socketType,
+		socket.SocketType,
 		t.Format(TIMESTAMP),
 		logMessage,
 	)
 }
 
 // CheckError creates common error validation
-func CheckError(socketType string, err error) {
+func (socket *Socket) CheckError(err error) {
 	if err != nil {
 		t := time.Now()
 		fmt.Printf("[%s] %s - Exception '%s', exiting...",
-			socketType,
+			socket.SocketType,
 			t.Format(TIMESTAMP),
 			err.Error(),
 		)

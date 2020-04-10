@@ -1,4 +1,4 @@
-package UDP
+package udp
 
 import (
 	c "../common"
@@ -8,8 +8,8 @@ import (
 	"strconv"
 )
 
-// serverType defines server identification when logging
-const serverType = "UDP:Server"
+// UDPServerType defines server identification when logging
+const UDPServerType = "UDP:Server"
 // savePath defines path for saving received file data
 const savePath = "./test/receive/UDP_RECEIVED.txt"
 
@@ -17,38 +17,40 @@ const savePath = "./test/receive/UDP_RECEIVED.txt"
 func CreateUDPServer(network string, serverPort string) {
 
 	// Startup
-	fmt.Println("Starting up "+serverType+" ...")
+	fmt.Println("Starting up "+UDPServerType+" ...")
+
+	udpSocket := c.Socket{UDPServerType}
 
 	listener, err := net.ListenPacket(network, serverPort)
-	c.CheckError(serverType, err)
+	udpSocket.CheckError(err)
 	defer listener.Close()
 
-	c.Log(serverType, "Up and running!\n[Crtl+C to quit]")
+	udpSocket.Log("Up and running!\n[Crtl+C to quit]")
 
 	// Listening to UDP
 	for {
-		buffer := make([]byte, c.BUFFER_SIZE)
+		buffer := make([]byte, c.BUFFERSIZE)
 		length, remoteAddr, err := listener.ReadFrom(buffer)
-		c.CheckError(serverType, err)
+		udpSocket.CheckError(err)
 
 		// Incoming request!
-		handleClient(remoteAddr.String(), buffer[:length])
+		handleClient(udpSocket, remoteAddr.String(), buffer[:length])
 	}
 }
 
 // handleClient handles incoming UDP client connections
-func handleClient(remoteAddr string, buffer []byte) {
+func handleClient(udpSocket c.Socket, remoteAddr string, buffer []byte) {
 	// Create new file
 	file, err := os.Create(savePath)
-	c.CheckError(serverType, err)
+	udpSocket.CheckError(err)
 	defer file.Close()
 
 	// Copy file data
 	_, err = file.Write(buffer)
-	c.CheckError(serverType, err)
+	udpSocket.CheckError(err)
 
 	// Log
 	fileInfo, _ := file.Stat()
 	formatBytes := strconv.FormatInt(fileInfo.Size(), 10)
-	c.Log(serverType, "RECEIVED "+formatBytes+" BYTES (SOURCE='"+remoteAddr+"')")
+	udpSocket.Log("RECEIVED "+formatBytes+" BYTES (SOURCE='"+remoteAddr+"')")
 }
