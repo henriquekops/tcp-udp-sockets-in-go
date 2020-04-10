@@ -21,9 +21,8 @@ func CreateTCPClient(network string, serverAddress string) {
 	defer connection.Close()
 
 	c.Log(clientType, "Connected to '" + connection.RemoteAddr().String() + "'")
-	//c.Log(clientType, "Input your data to send to server\n['exit' to quit]")
 
-	// Send file to TCP server
+	// Open file
 	file, err := os.Open("./test/send/test1.txt")
 	if err != nil {
 		c.Log(clientType, "File does not exist!")
@@ -31,8 +30,11 @@ func CreateTCPClient(network string, serverAddress string) {
 	}
 	defer file.Close()
 
+	// Send file to TCP server
 	fileInfo, _ := file.Stat()
 	_, err =  io.Copy(connection, file)
 	c.CheckError(clientType, err)
+
+	// Log
 	c.Log(clientType, "SENT " + strconv.FormatInt(fileInfo.Size(), 10) + " BYTES")
 }
