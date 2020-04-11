@@ -10,11 +10,11 @@ import (
 )
 
 // TCPServerType defines server identification when logging
-const TCPServerType = "TCP:Server"
+const TCPServerType = "tcp:Server"
 // savePath defines path for saving received file data
 const savePath = "./test/receive/TCP_RECEIVED.txt"
 
-// CreateTCPServer create server and listen to TCP
+// CreateTCPServer create server and listen to tcp
 func CreateTCPServer(network string, serverPort string) {
 
 	// Startup
@@ -28,7 +28,7 @@ func CreateTCPServer(network string, serverPort string) {
 
 	tcpSocket.Log("Up and running!\n[Crtl+C to quit]")
 
-	// Listening to TCP
+	// Listening to tcp
 	for {
 		connection, err := listener.Accept()
 		tcpSocket.CheckError(err)
@@ -38,7 +38,7 @@ func CreateTCPServer(network string, serverPort string) {
 	}
 }
 
-// handleClient handles incoming TCP client connections
+// handleClient handles incoming tcp client connections
 func handleClient(tcpSocket c.Socket, connection net.Conn) {
 	// New connection
 	remoteAddr := connection.RemoteAddr().String()

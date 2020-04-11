@@ -12,9 +12,9 @@ import (
 )
 
 // clientType defines client identification when logging
-const UDPClientType = "UDP:Client"
+const UDPClientType = "udp:Client"
 
-// CreateUDPClient creates new UDP connection
+// CreateUDPClient creates new udp connection
 func CreateUDPClient(network string, serverAddress string) {
 
 	// Startup
@@ -45,7 +45,7 @@ func CreateUDPClient(network string, serverAddress string) {
 	}
 	defer file.Close()
 
-	// Send file to TCP server
+	// Send file to tcp server
 	fileInfo, _ := file.Stat()
 	_, err =  io.Copy(connection, file)
 	udpSocket.CheckError(err)

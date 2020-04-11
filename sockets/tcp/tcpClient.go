@@ -12,9 +12,9 @@ import (
 )
 
 // clientType defines client identification when logging
-const TCPClientType = "TCP:Client"
+const TCPClientType = "tcp:Client"
 
-// CreateTCPClient creates new TCP connection
+// CreateTCPClient creates new tcp connection
 func CreateTCPClient(network string, serverAddress string) {
 
 	// Startup
@@ -42,7 +42,7 @@ func CreateTCPClient(network string, serverAddress string) {
 	}
 	defer file.Close()
 
-	// Send file to TCP server
+	// Send file to tcp server
 	fileInfo, _ := file.Stat()
 	_, err =  io.Copy(connection, file)
 	tcpSocket.CheckError(err)
