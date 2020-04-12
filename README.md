@@ -6,7 +6,27 @@ golang's package for transporting files through TCP and UDP protocols.
 
 ### How to use
 
-At poject's root directory type:
+At poject's root directory setup the project:
+
+```
+# for linux
+$ make setup-linux
+
+# for windows
+$ make setup-windows
+```
+
+Then, alter .env file:
+
+```
+$ nano .env
+
+# alter the fields
+# HOST=<HOST:string>
+# PORT=<PORT:string>
+```
+
+Then run the project with:
 
 ```
 $ ./main
